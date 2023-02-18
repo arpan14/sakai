@@ -942,6 +942,21 @@
         <scope>provided</scope>
       </dependency>
       <!-- Logging Dependencies End -->
+
+      <!-- Spanner Hibernate dependencies -->
+      <dependency>
+        <groupId>com.google.cloud</groupId>
+        <artifactId>google-cloud-spanner-hibernate-dialect</artifactId>
+        <version>1.5.6</version>
+        <scope>compile</scope>
+      </dependency>
+      <dependency>
+        <groupId>com.google.cloud</groupId>
+        <artifactId>google-cloud-spanner-jdbc</artifactId>
+        <version>2.7.4</version>
+        <scope>compile</scope>
+      </dependency>
+
       <dependency>
         <groupId>org.hibernate</groupId>
         <artifactId>hibernate-core</artifactId>
@@ -2270,17 +2285,6 @@
         <artifactId>MathParser.org-mXparser</artifactId>
         <version>4.4.2</version>
         <scope>provided</scope>
-      </dependency>
-      <!-- Spanner Hibernate dependencies -->
-      <dependency>
-        <groupId>com.google.cloud</groupId>
-        <artifactId>google-cloud-spanner-hibernate-dialect</artifactId>
-        <version>1.5.6</version>
-      </dependency>
-      <dependency>
-        <groupId>com.google.cloud</groupId>
-        <artifactId>google-cloud-spanner-jdbc</artifactId>
-        <version>2.7.4</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
