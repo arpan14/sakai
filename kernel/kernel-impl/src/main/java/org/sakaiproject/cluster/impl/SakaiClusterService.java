@@ -596,7 +596,7 @@ public class SakaiClusterService implements ClusterService
 				statement = clusterServiceSql.getInsertServerSql();
 				fields = new Object[3];
 				fields[0] = serverIdInstance;
-				fields[1] = status;
+				fields[1] = status.toString();
 				fields[2] = m_serverConfigurationService.getServerId();
 				boolean ok = m_sqlService.dbWrite(statement, fields);
 				if (!ok)
@@ -611,7 +611,7 @@ public class SakaiClusterService implements ClusterService
 				// register that this app server is alive and well
 				statement = clusterServiceSql.getUpdateServerSql();
 				fields = new Object[3];
-				fields[0] = status;
+				fields[0] = status.toString();
 				fields[1] = m_serverConfigurationService.getServerId();
 				fields[2] = serverIdInstance;
 				boolean ok = m_sqlService.dbWrite(statement, fields);
