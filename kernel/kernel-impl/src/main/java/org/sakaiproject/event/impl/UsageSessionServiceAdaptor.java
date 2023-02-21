@@ -972,7 +972,7 @@ public abstract class UsageSessionServiceAdaptor implements UsageSessionService
 			// process the statement
 			boolean ok = sqlService().dbWrite(statement, new Object[]{
 				session.getEnd(),
-				session.isClosed() ? null : Boolean.valueOf(true),
+				session.isClosed() ? Boolean.valueOf(false) : Boolean.valueOf(true),
 				session.getId()
 			});
 			if (!ok)
