@@ -64,7 +64,7 @@ public class ContentServiceSqlHSql extends ContentServiceSqlDefault
 	 */
 	public String getFilesizeColumnExistsSql() 
 	{
-		return "show columns from CONTENT_RESOURCE like 'FILE_SIZE'";
+		return "select 1 from SAKAI_USER";
 	}
 	
 	/**
