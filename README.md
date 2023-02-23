@@ -134,4 +134,53 @@ Other languages have been declared legacy in Sakai 19 and have been moved to [Sa
 ## Community (contrib) tools
 A number of institutions have written additional tools for Sakai that they use in their local installations, but are not yet in an official release of Sakai. These are being collected at https://github.com/sakaicontrib where you will find information about each one. You might find just the thing you are after!
 
+## For Integrating Spanner
 
+I had to make a bunch of changes as instructed in guideline - https://sakaiproject.atlassian.net/wiki/spaces/DOC/pages/32201507113/Sakai+22+Install+Guide+Source
+
+### local.properties file
+
+I had to comment out all existing MySQL proprties and include the below for Spanner. `SqlService` was kept as "mysql" to avoid making additional changes in code. `lenient=true` had to be added since app sends additional properties in the connection request and spanner throws exception. `auto.ddl` had to be set as false since Spanner does not support a few DDL statements. 
+
+```
+# Spanner settings - make sure to alter as appropriate
+vendor@org.sakaiproject.db.api.SqlService=mysql
+driverClassName@javax.sql.BaseDataSource=com.google.cloud.spanner.jdbc.JdbcDriver
+hibernate.dialect=com.google.cloud.spanner.hibernate.SpannerDialect
+url@javax.sql.BaseDataSource=jdbc:cloudspanner:/projects/span-cloud-testing/instances/arpanmishra-sakai-22-instance/databases/sakaidatabase;lenient=true
+validationQuery@javax.sql.BaseDataSource=select 1 from SAKAI_USER
+defaultTransactionIsolationString@javax.sql.BaseDataSource=TRANSACTION_SERIALIZABLE
+
+# Configurations used within the Spanner Hibernate dialect
+hibernate.connection.driver_class=com.google.cloud.spanner.jdbc.JdbcDriver
+hibernate.connection.url=jdbc:cloudspanner:/projects/span-cloud-testing/instances/arpanmishra-sakai-22-instance/databases/sakaidatabase;lenient=true
+
+# establish auto.ddl - on by default
+# auto.ddl=true
+auto.ddl=false
+```
+
+### context.xml file
+Apart from what is added in installation guide, I had to additionally add `scanManifest` as false. Post adding the Spanner hibernate and JDBC dependencies, tomcat was not starting due to missing JARs. Upon looking further, the required JARs were present. But there was probably some stale manifest declarations which was causing the missing JAR failure.
+
+```
+<JarScanner scanManifest="false">
+    <!-- This is to speedup startup so that tomcat doesn't scan as much -->
+    <JarScanFilter defaultPluggabilityScan="false" />
+</JarScanner>
+```
+
+### setenv.sh file
+Below are the properties that I had to add. Most is inline with what was recommended in the guide.
+
+```
+export JAVA_OPTS="-server -Xms1g -Xmx2g -Djava.awt.headless=true -XX:+UseCompressedOops -XX:+UseConcMarkSweepGC -XX:+DisableExplicitGC"
+JAVA_OPTS="$JAVA_OPTS -Dhttp.agent=Sakai"
+JAVA_OPTS="$JAVA_OPTS -Dsakai.demo=true"
+JAVA_OPTS="$JAVA_OPTS -Dorg.apache.jasper.compiler.Parser.STRICT_QUOTE_ESCAPING=false"
+JAVA_OPTS="$JAVA_OPTS -Djava.util.Arrays.useLegacyMergeSort=true"
+JAVA_OPTS="$JAVA_OPTS -Dsakai.security=$CATALINA_HOME/sakai/"
+JAVA_OPTS="$JAVA_OPTS -Duser.timezone=US/Eastern"
+JAVA_OPTS="$JAVA_OPTS -Dsakai.cookieName=SAKAI2SESSIONID"
+JAVA_OPTS="$JAVA_OPTS -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=8089 -Dcom.sun.management.jmxremote.local.only=false -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false"
+```
