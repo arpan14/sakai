@@ -52,7 +52,7 @@ public class UsageSessionServiceSqlDefault implements UsageSessionServiceSql
 	 */
 	public String getSakaiSessionSql2()
 	{
-		return "select " + USAGE_SESSION_COLUMNS + " from SAKAI_SESSION where SESSION_ACTIVE=1 ORDER BY SESSION_SERVER ASC, SESSION_START ASC";
+		return "select " + USAGE_SESSION_COLUMNS + " from SAKAI_SESSION where SESSION_ACTIVE=true ORDER BY SESSION_SERVER ASC, SESSION_START ASC";
 	}
 
 	/**
@@ -64,7 +64,7 @@ public class UsageSessionServiceSqlDefault implements UsageSessionServiceSql
              "from   SAKAI_SESSION " + alias                                    + " " +
              "inner join " + joinTable + " " + joinAlias                        + " " +
              "ON "    + alias + ".SESSION_ID = " + joinAlias + "." + joinColumn + " " +
-             "where " + alias + ".SESSION_ACTIVE=1 and " + joinCriteria;
+             "where " + alias + ".SESSION_ACTIVE=true and " + joinCriteria;
    }
 
    /**
@@ -77,7 +77,7 @@ public class UsageSessionServiceSqlDefault implements UsageSessionServiceSql
 
 	public String getOpenSessionsOnInvalidServersSql(List<String> validServerIds)
 	{
-		StringBuilder sql = new StringBuilder("select "+ USAGE_SESSION_COLUMNS + " from SAKAI_SESSION where SESSION_ACTIVE=1 and SESSION_SERVER not in (");
+		StringBuilder sql = new StringBuilder("select "+ USAGE_SESSION_COLUMNS + " from SAKAI_SESSION where SESSION_ACTIVE=true and SESSION_SERVER not in (");
 		for (int i = 0; i < validServerIds.size(); i++)
 		{
 			String serverId = validServerIds.get(i);
