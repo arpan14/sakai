@@ -44,7 +44,7 @@ public class ClusterEventTrackingServiceSqlMySql extends ClusterEventTrackingSer
 
     @Override
     public String getEventsCountSql() {
-        return "select TABLE_ROWS FROM information_schema.TABLES WHERE TABLE_NAME='SAKAI_EVENT' ORDER BY CREATE_TIME LIMIT 1;";
+        return "select COUNT(*) from SAKAI_EVENT;";
     }
 
 }
